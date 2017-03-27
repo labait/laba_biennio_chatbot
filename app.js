@@ -68,7 +68,7 @@ function processPostback(event) {
         name = bodyObj.first_name;
         greeting = "Hi " + name + ". ";
       }
-      var message = greeting + "My name is SP Movie Bot. I can tell you various details regarding movies. What movie would you like to know about?";
+      var message = greeting + "I'm the bot of the LABA Biennio Course, i'm here to help you!";
       sendMessage(senderId, {text: message});
     });
   }
