@@ -106,7 +106,8 @@ function processMessage(event) {
                 case "rating":
                     getMovieDetail(senderId, formattedMsg);
                     break;
-
+                case: "hours":
+                    getHours(senderId);
                 default:
                     findMovie(senderId, formattedMsg);
             }
@@ -181,6 +182,12 @@ function getMovieDetail(userId, field) {
             sendMessage(userId, {text: movie[field]});
         }
     });
+}
+
+function getHours(userId) {
+  var datetime = new Date();
+  var datetime_string = "uè giovane, sono le "+datetime;
+  sendMessage(userId, {text: datetime_string});
 }
 
 // sends message to user
