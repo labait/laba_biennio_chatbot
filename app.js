@@ -108,6 +108,7 @@ function processMessage(event) {
                     break;
                 case: "hours":
                     getHours(senderId);
+                    break;
                 default:
                     findMovie(senderId, formattedMsg);
             }
