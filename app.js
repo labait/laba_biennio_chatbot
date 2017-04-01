@@ -1,4 +1,5 @@
 require('dotenv').config()
+var moment = require('moment');
 var pry = require('pryjs')
 
 var express = require("express");
@@ -34,7 +35,6 @@ app.get("/webhook", function (req, res) {
 // All callbacks for Messenger will be POST-ed here
 app.post("/webhook", function (req, res) {
     // Make sure this is a page subscription
-    //eval(pry.it)
     if (req.body.object == "page") {
         // Iterate over each entry
         // There may be multiple entries if batched
@@ -48,8 +48,9 @@ app.post("/webhook", function (req, res) {
                 }
             });
         });
+
+        res.sendStatus(200);
     }
-    res.sendStatus(404);
 });
 
 function processPostback(event) {
@@ -109,7 +110,7 @@ function processMessage(event) {
                 case "rating":
                     getMovieDetail(senderId, formattedMsg);
                     break;
-                case: "hours":
+                case "hours":
                     getHours(senderId);
                     break;
                 default:
@@ -122,13 +123,10 @@ function processMessage(event) {
 }
 
 function findMovie(userId, movieTitle) {
-    var url = "http://www.omdbapi.com/?type=movie&t=" + movieTitle
-    console.log(url)
-    request(url, function (error, response, body) {
+    request("http://www.omdbapi.com/?type=movie&t=" + movieTitle, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             var movieObj = JSON.parse(body);
             if (movieObj.Response === "True") {
-
                 var query = {user_id: userId};
                 var update = {
                     user_id: userId,
@@ -192,13 +190,14 @@ function getMovieDetail(userId, field) {
 }
 
 function getHours(userId) {
-  var datetime = new Date();
-  var datetime_string = "uè giovane, sono le "+datetime;
+  var datetime = moment().lang("en").format('LLLL');
+  var datetime_string = "hey dude, it's "+datetime;
   sendMessage(userId, {text: datetime_string});
 }
 
 // sends message to user
 function sendMessage(recipientId, message) {
+    console.log("senging message: "+message.text);
     request({
         url: "https://graph.facebook.com/v2.6/me/messages",
         qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
