@@ -48,7 +48,7 @@ app.post("/webhook", function (req, res) {
               }
           });
       });
-
+      //res.status(200).json({ result: 'ok' });
       res.sendStatus(200);
     } else {
       res.sendStatus(404);
@@ -169,7 +169,6 @@ function findMovie(userId, movieTitle) {
                             }
                         };
                         sendMessage(userId, message);
-                        console.log(JSON.stringify(message));
                     }
                 });
             } else {
@@ -200,15 +199,16 @@ function getHours(userId) {
 
 // sends message to user
 function sendMessage(recipientId, message) {
-    console.log("senging message: "+message.text);
+    var json = {
+        recipient: {id: recipientId},
+        message: message,
+    };
+    console.log("sending: "+JSON.stringify(json));
     request({
         url: "https://graph.facebook.com/v2.6/me/messages",
         qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
         method: "POST",
-        json: {
-            recipient: {id: recipientId},
-            message: message,
-        }
+        json: json
     }, function(error, response, body) {
         if (error) {
             console.log("Error sending message: " + response.error);
