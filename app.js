@@ -1,3 +1,6 @@
+require('dotenv').config()
+var pry = require('pryjs')
+
 var express = require("express");
 var request = require("request");
 var bodyParser = require("body-parser");
@@ -31,6 +34,7 @@ app.get("/webhook", function (req, res) {
 // All callbacks for Messenger will be POST-ed here
 app.post("/webhook", function (req, res) {
     // Make sure this is a page subscription
+    //eval(pry.it)
     if (req.body.object == "page") {
         // Iterate over each entry
         // There may be multiple entries if batched
@@ -44,9 +48,8 @@ app.post("/webhook", function (req, res) {
                 }
             });
         });
-
-        res.sendStatus(200);
     }
+    res.sendStatus(404);
 });
 
 function processPostback(event) {
@@ -117,10 +120,13 @@ function processMessage(event) {
 }
 
 function findMovie(userId, movieTitle) {
-    request("http://www.omdbapi.com/?type=movie&t=" + movieTitle, function (error, response, body) {
+    var url = "http://www.omdbapi.com/?type=movie&t=" + movieTitle
+    console.log(url)
+    request(url, function (error, response, body) {
         if (!error && response.statusCode == 200) {
             var movieObj = JSON.parse(body);
             if (movieObj.Response === "True") {
+
                 var query = {user_id: userId};
                 var update = {
                     user_id: userId,
