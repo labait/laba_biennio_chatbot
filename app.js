@@ -36,20 +36,22 @@ app.get("/webhook", function (req, res) {
 app.post("/webhook", function (req, res) {
     // Make sure this is a page subscription
     if (req.body.object == "page") {
-        // Iterate over each entry
-        // There may be multiple entries if batched
-        req.body.entry.forEach(function(entry) {
-            // Iterate over each messaging event
-            entry.messaging.forEach(function(event) {
-                if (event.postback) {
-                    processPostback(event);
-                } else if (event.message) {
-                    processMessage(event);
-                }
-            });
-        });
+      // Iterate over each entry
+      // There may be multiple entries if batched
+      req.body.entry.forEach(function(entry) {
+          // Iterate over each messaging event
+          entry.messaging.forEach(function(event) {
+              if (event.postback) {
+                  processPostback(event);
+              } else if (event.message) {
+                  processMessage(event);
+              }
+          });
+      });
 
-        res.sendStatus(200);
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(404);
     }
 });
 
@@ -167,6 +169,7 @@ function findMovie(userId, movieTitle) {
                             }
                         };
                         sendMessage(userId, message);
+                        console.log(JSON.stringify(message));
                     }
                 });
             } else {
@@ -190,8 +193,8 @@ function getMovieDetail(userId, field) {
 }
 
 function getHours(userId) {
-  var datetime = moment().lang("en").format('LLLL');
-  var datetime_string = "hey dude, it's "+datetime;
+  var datetime = moment().locale("en").format('LLLL');
+  var datetime_string = "hey dude! it's "+datetime;
   sendMessage(userId, {text: datetime_string});
 }
 
