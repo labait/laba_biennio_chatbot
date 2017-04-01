@@ -1,3 +1,7 @@
+require('dotenv').config()
+var moment = require('moment');
+var pry = require('pryjs')
+
 var express = require("express");
 var request = require("request");
 var bodyParser = require("body-parser");
@@ -106,7 +110,7 @@ function processMessage(event) {
                 case "rating":
                     getMovieDetail(senderId, formattedMsg);
                     break;
-                case: "hours":
+                case "hours":
                     getHours(senderId);
                     break;
                 default:
@@ -186,13 +190,14 @@ function getMovieDetail(userId, field) {
 }
 
 function getHours(userId) {
-  var datetime = new Date();
-  var datetime_string = "uè giovane, sono le "+datetime;
+  var datetime = moment().lang("en").format('LLLL');
+  var datetime_string = "hey dude, it's "+datetime;
   sendMessage(userId, {text: datetime_string});
 }
 
 // sends message to user
 function sendMessage(recipientId, message) {
+    console.log("senging message: "+message.text);
     request({
         url: "https://graph.facebook.com/v2.6/me/messages",
         qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
