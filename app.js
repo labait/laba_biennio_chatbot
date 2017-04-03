@@ -51,8 +51,25 @@ app.get("/chuck", function (req, res) {
       }
 
   });
+});
 
-  //res.sendStatus(200);
+app.get("/weather", function (req, res) {
+  var message = "weather's not available";
+  var url ="https://api.darksky.net/forecast/00c7658658103952f0566b7c8d854765/37.8267,-122.4233?lang=it&units=si";
+  request({
+      url: url,
+      method: "GET"
+  }, function(error, response, body) {
+      if (error) {
+        res.sendStatus(404);
+        res.send(message);
+      } else {
+        var json = JSON.parse(body);
+        message = json.hourly.summary;
+        res.send(message);
+      }
+
+  });
 });
 
 
