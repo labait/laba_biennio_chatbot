@@ -32,6 +32,30 @@ app.get("/webhook", function (req, res) {
     }
 });
 
+
+app.get("/chuck", function (req, res) {
+  var message = "chuck's not available";
+  var url ="http://api.icndb.com/jokes/random?firstName=John&amp;lastName=Doe";
+  request({
+      url: url,
+      method: "GET"
+  }, function(error, response, body) {
+      if (error) {
+        res.sendStatus(404);
+        res.send(message);
+      } else {
+        var json = JSON.parse(body);
+        console.log(json.value.joke);
+        message = json.value.joke;
+        res.send(message);
+      }
+
+  });
+
+  //res.sendStatus(200);
+});
+
+
 // All callbacks for Messenger will be POST-ed here
 app.post("/webhook", function (req, res) {
     // Make sure this is a page subscription
@@ -122,6 +146,16 @@ function processMessage(event) {
             sendMessage(senderId, {text: "Sorry, I don't understand your request."});
         }
     }
+}
+
+function searchMovie(q) {
+  request("http://www.omdbapi.com/?type=movie&t=" + q, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        return JSON.parse(body);
+      } else {
+        return false
+      }
+  });
 }
 
 function findMovie(userId, movieTitle) {
