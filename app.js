@@ -17,8 +17,15 @@ app.listen((process.env.PORT || 5000));
 
 // Server index page
 app.get("/", function (req, res) {
-    res.send("Deployed!");
+    res.send("hello world!");
 });
+
+
+app.get("/time", function (req, res) {
+  var datetime = new Date();
+  res.send("it's "+datetime);
+});
+
 
 // Facebook Webhook
 // Used for verification
@@ -45,7 +52,7 @@ app.get("/chuck", function (req, res) {
         res.send(message);
       } else {
         var json = JSON.parse(body);
-        console.log(json.value.joke);
+        console.log(json);
         message = json.value.joke;
         res.send(message);
       }
@@ -66,7 +73,7 @@ app.get("/weather", function (req, res) {
       } else {
         var json = JSON.parse(body);
         message = json.hourly.summary;
-        res.send(message);
+        res.send(json);
       }
 
   });
