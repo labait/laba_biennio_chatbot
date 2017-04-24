@@ -17,7 +17,12 @@ app.listen((process.env.PORT || 5000));
 
 // Server index page
 app.get("/", function (req, res) {
-    res.send("Deployed!");
+    res.send("Helloooo!");
+});
+
+app.get("/time", function (req, res) {
+  var datetime = new Date();
+    res.send("it's" +datetime);
 });
 
 // Facebook Webhook
